@@ -13,11 +13,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var feelsLikeTmprLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
+    let networkWeatherManager = NetworkWeatheManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     @IBAction func tapSearchImage(_ sender: Any) {
+        networkWeatherManager.fetchWeatherRequest(forCity: "Minsk")
     }
 }
 
