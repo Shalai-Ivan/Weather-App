@@ -19,7 +19,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
     }
     @IBAction func tapSearchImage(_ sender: Any) {
-        networkWeatherManager.fetchWeatherRequest(forCity: "Minsk")
+        createAlert { city in
+            self.networkWeatherManager.fetchWeatherRequest(forCity: city)
+        }
     }
 }
-
