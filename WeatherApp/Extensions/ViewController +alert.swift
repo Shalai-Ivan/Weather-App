@@ -9,7 +9,7 @@ import UIKit
 
 extension ViewController {
     func createAlert(actionHandler: @escaping ((String) -> Void)) {
-        let alert = UIAlertController(title: "Search", message: "Enter city", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Search", message: "Enter the city", preferredStyle: .alert)
         alert.addTextField()
         let searchAction = UIAlertAction(title: "Find", style: .default) { action in
             guard let text = alert.textFields?.first?.text else { return }

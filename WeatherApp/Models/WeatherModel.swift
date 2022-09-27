@@ -36,7 +36,7 @@ struct WeatherModel {
         case 800:
             return "sun.min.fill"
         default:
-            return "nosign"
+            return "weather"
         }
     }
     init?(weatherData: WeatherData) {

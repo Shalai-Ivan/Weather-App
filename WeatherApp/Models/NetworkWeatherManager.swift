@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NetworkWeatheManager {
+final class NetworkWeatheManager {
     var completionHandler: ((WeatherModel) -> Void)?
     func fetchWeatherRequest(forCity city: String) {
         let stringURL = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(apiKey)&units=metric"
@@ -23,7 +23,7 @@ class NetworkWeatheManager {
         task.resume()
     }
     
-    func parseJSON(withData data: Data) -> WeatherModel? {
+    private func parseJSON(withData data: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
         do {
             let model = try decoder.decode(WeatherData.self, from: data)
