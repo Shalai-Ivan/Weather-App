@@ -28,9 +28,20 @@ final class NetworkWeatheManager {
         do {
             let model = try decoder.decode(WeatherData.self, from: data)
             return WeatherModel(weatherData: model)
-        } catch let error {
-            print(error.localizedDescription)
-            return nil
+        } catch let DecodingError.dataCorrupted(context) {
+            print(context)
+        } catch let DecodingError.keyNotFound(key, context) {
+            print("Key '\(key)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch let DecodingError.valueNotFound(value, context) {
+            print("Value '\(value)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch let DecodingError.typeMismatch(type, context)  {
+            print("Type '\(type)' mismatch:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch {
+            print("error: ", error)
         }
+        return nil
     }
 }

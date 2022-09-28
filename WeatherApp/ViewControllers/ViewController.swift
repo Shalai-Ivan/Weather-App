@@ -14,12 +14,15 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var feelsLikeTmprLabel: UILabel!
     @IBOutlet private weak var cityLabel: UILabel!
     private let networkWeatherManager = NetworkWeatheManager()
+    private var weatherModel: WeatherModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.networkWeatherManager.completionHandler = { [weak self] weatherModel in
+            self?.weatherModel = weatherModel
             self?.updateWeather(weatherModel: weatherModel)
         }
+        animateBackgroundImage()
     }
     private func updateWeather(weatherModel: WeatherModel) {
         DispatchQueue.main.async {
@@ -41,8 +44,13 @@ final class ViewController: UIViewController {
         popoverVC?.sourceView = view
         popoverVC?.sourceRect = CGRect(x: view.frame.midX, y: view.frame.midY, width: 0, height: 0 )
         popoverVC?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
-        present(detailedVC, animated: true) { [weak self] in
-            detailedVC.backgroundImage.image = self?.backgroundImage.image
+        detailedVC.image = self.backgroundImage.image!
+        detailedVC.weatherModel = weatherModel
+        present(detailedVC, animated: true)
+    }
+    private func animateBackgroundImage() {
+        UIView.animate(withDuration: 10, delay: 0, options: [.repeat, .autoreverse]) { [weak self] in
+            self?.backgroundImage.frame.origin.x += 100
         }
     }
     @IBAction private func tapSearchImage(_ sender: Any) {
