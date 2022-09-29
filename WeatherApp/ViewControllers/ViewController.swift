@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class ViewController: UIViewController {
     @IBOutlet private weak var backgroundImage: UIImageView!
@@ -15,6 +16,13 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var cityLabel: UILabel!
     private let networkWeatherManager = NetworkWeatheManager()
     private var weatherModel: WeatherModel?
+    private lazy var locationManger: CLLocationManager = {
+        let lm = CLLocationManager()
+        lm.delegate = self
+        lm.desiredAccuracy = kCLLocationAccuracyKilometer
+        lm.requestWhenInUseAuthorization()
+        return lm
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +31,9 @@ final class ViewController: UIViewController {
             self?.updateWeather(weatherModel: weatherModel)
         }
         animateBackgroundImage()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManger.requestLocation()
+        }
     }
     private func updateWeather(weatherModel: WeatherModel) {
         DispatchQueue.main.async {
@@ -55,7 +66,7 @@ final class ViewController: UIViewController {
     }
     @IBAction private func tapSearchImage(_ sender: Any) {
         createAlert { [weak self] city in
-            self?.networkWeatherManager.fetchWeatherRequest(forCity: city)
+            self?.networkWeatherManager.fetchWeatherRequest(forRequest: .city(forCity: city))
         }
     }
     @IBAction private func tapDetailedInformation(_ sender: Any) {
@@ -66,5 +77,17 @@ final class ViewController: UIViewController {
 extension ViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
+    }
+}
+
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        let latitude = location.coordinate.latitude
+        let longitude = location.coordinate.longitude
+        networkWeatherManager.fetchWeatherRequest(forRequest: .location(latitude: latitude, longitude: longitude))
+    }
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error.localizedDescription)
     }
 }

@@ -74,6 +74,7 @@ struct WeatherModel {
     private func sunRiseSetCoder(time: Double) -> String {
         let dateFormatter = DateFormatter()
         let date = Date(timeIntervalSince1970: time)
+        dateFormatter.locale = Locale(identifier: cityName)
         dateFormatter.dateStyle = .none
         dateFormatter.timeStyle = .short
         return dateFormatter.string(from: date)
