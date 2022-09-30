@@ -1,4 +1,4 @@
 # Weather-App
-Openweathermap API
-URLSession, CoreLocation
-MVC pattern
+- Openweathermap API
+- URLSession, CoreLocation
+- MVC pattern
